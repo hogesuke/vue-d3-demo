@@ -18,8 +18,7 @@
         :key="index"
         :dataset="dataset"
         :xScale="xScale"
-        :yScale="yScale"
-        class="graph-line"/>
+        :yScale="yScale" />
     </svg>
   </div>
 </template>

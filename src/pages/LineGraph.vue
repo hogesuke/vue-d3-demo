@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div>LineGraphだよ</div>
-    <activity-graph
-      :datasets="[{ data: datasets, color: '#4080d8' }]" /> <!-- datasetsの命名をどうにかしたい -->
+    <div>折れ線グラフ</div>
+    <div>
+      <button @click="datasets = generateData()">Change</button>
+    </div>
+    <activity-graph :datasets="[{ data: datasets, color: '#4080d8' }]" /> <!-- datasetsの命名をどうにかしたい -->
   </div>
 </template>
 
@@ -17,14 +19,7 @@ export default {
   },
   data: function () {
     return {
-      datasets: [
-        { x: 1, y: 10 },
-        { x: 2, y: 15 },
-        { x: 3, y: 5 },
-        { x: 4, y: 9 },
-        { x: 5, y: 30 },
-        { x: 6, y: 25 },
-      ],
+      datasets: this.generateData(),
     };
   },
   computed: {
@@ -32,6 +27,16 @@ export default {
   mounted () {
   },
   methods: {
+    getRandom (max, min) {
+      return Math.floor(Math.random() * (max + 1 - min)) + min;
+    },
+    generateData () {
+      const data = [];
+      for (let i = 1; i <= 50; i++) {
+        data.push({ x: i, y: this.getRandom(0, 100) });
+      }
+      return data;
+    },
   },
 };
 </script>
