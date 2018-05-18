@@ -1,41 +1,40 @@
 <template>
-  <div class="graph-container">
-    <div
-      :style="{ width: svgWidth + 'px', height: svgHeight + 'px' }"
+  <div
+    :style="{ width: svgWidth + 'px', height: svgHeight + 'px' }"
+    class="graph-container">
+    <svg
+      :width="svgWidth"
+      :height="svgHeight"
       class="graph">
-      <svg
-        :width="svgWidth"
-        :height="svgHeight">
-        <g
-          :transform="`translate(${margin.left}, 0)`"
-          class="y axis"/>
-        <g
-          :transform="`translate(0, ${height + margin.top})`"
-          class="x axis"/>
-        <graph-path
-          v-for="(dataset, index) in datasets"
-          :key="index"
-          :dataset="dataset"
-          :xScale="xScale"
-          :yScale="yScale"
-          class="graph-line"/>
-        <rect
-          :width="width"
-          :height="height"
-          :x="margin.left"
-          :y="margin.top"/>
-      </svg>
-    </div>
+      <y-axis
+        :position="{ x: margin.left, y: 0 }"
+        :graphWidth="width"
+        :yScale="yScale" />
+      <x-axis
+        :position="{ x: 0, y: height + margin.top }"
+        :xScale="xScale" />
+      <graph-path
+        v-for="(dataset, index) in datasets"
+        :key="index"
+        :dataset="dataset"
+        :xScale="xScale"
+        :yScale="yScale"
+        class="graph-line"/>
+    </svg>
   </div>
 </template>
 
 <script>
 import * as d3 from 'd3';
 import GraphPath from './GraphPath';
+import XAxis from './XAxis';
+import YAxis from './YAxis';
 
 export default {
   components: {
     GraphPath,
+    XAxis,
+    YAxis,
   },
   props: {
     datasets: {
@@ -46,10 +45,10 @@ export default {
   data: function () {
     return {
       height: 300,
-      width: 485,
+      width: 550,
       ymin: 0,
       ymax: 0,
-      margin: { top: 10, right: 30, bottom: 20, left: 55 },
+      margin: { top: 10, right: 30, bottom: 25, left: 55 },
     };
   },
   computed: {
@@ -97,77 +96,14 @@ export default {
     },
   },
   mounted () {
-    this.svg = d3.select('svg');
-
-    // this.$watch('datasets', (newData, oldData) => {
-    //   if (_.isEqual(newData, oldData) || this.datasets.length <= 0) {
-    //     return;
-    //   }
-
-    // this.checkMinMax();
-    this.createAxis(this.datasets[0].data);
-    // });
   },
   methods: {
-    createAxis (data) {
-      const xAxis = d3.axisBottom(this.xScale)
-        .tickSizeInner(0)
-        .tickSizeOuter(0) // 目盛線の長さ（外側）
-        .tickPadding(10) // 目盛線とテキストの間の長さ
-        // .tickFormat(d3.timeFormat('%H:%M'))
-        .ticks(4);
-
-      const yAxis = d3.axisLeft(this.yScale)
-        .tickSizeInner(-this.width)
-        .tickSizeOuter(0)
-        .tickPadding(10)
-        .ticks(4);
-
-      this.svg.select('g.x.axis').call(xAxis);
-      this.svg.select('g.y.axis').call(yAxis);
-    },
   },
 };
 </script>
 
 <style lang="scss">
-  // NOTE: scoped styleにするとグラフにスタイルを当てられないためscopedにしていない
-
   .graph-container {
-
-    .graph {
-      position: relative;
-      margin-top: 10px;
-
-      svg {
-        position: relative;
-
-        rect {
-          fill-opacity: 0;
-        }
-      }
-
-      .yaxis-text {
-        fill: #aaa;
-      }
-
-      .x.axis,
-      .y.axis {
-        font-weight: 700;
-
-        .domain {
-          stroke: #aaa;
-        }
-
-        g.tick {
-          line {
-            stroke: #eaeaea;
-          }
-          text {
-            fill: rgba(0, 0, 0, .5);
-          }
-        }
-      }
-    }
+    margin: 50px auto;
   }
 </style>
