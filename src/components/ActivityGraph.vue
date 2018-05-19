@@ -78,7 +78,8 @@ export default {
       return d3.max(this.xValues);
     },
     yMin () {
-      return d3.min(this.yValues);
+      // return d3.min(this.yValues);
+      return 0;
     },
     yMax () {
       return d3.max(this.yValues);
