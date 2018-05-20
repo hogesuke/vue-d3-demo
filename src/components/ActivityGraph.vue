@@ -19,6 +19,14 @@
         :dataset="dataset"
         :xScale="xScale"
         :yScale="yScale" />
+      <tool-tip
+        :width="width"
+        :height="height"
+        :x="margin.left"
+        :y="margin.top"
+        :xScale="xScale"
+        :yScale="yScale"
+        :dataset="datasets[0].data"/> <!-- TODO 複数のデータセットに対応するか否か -->
     </svg>
   </div>
 </template>
@@ -28,12 +36,14 @@ import * as d3 from 'd3';
 import GraphPath from './GraphPath';
 import XAxis from './XAxis';
 import YAxis from './YAxis';
+import ToolTip from './ToolTip';
 
 export default {
   components: {
     GraphPath,
     XAxis,
     YAxis,
+    ToolTip,
   },
   props: {
     datasets: {

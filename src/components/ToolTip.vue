@@ -1,76 +1,100 @@
 <template>
-  <div
-    :class="{ active: active }"
-    class="tooltip">
-    <div>{{ formatDate(date) }}</div>
-    <!-- TODO: value, valuesの命名変えたい -->
-    <div
-      v-for="value in values"
-      :key="value.label"
-      class="legend">
-      <span
-        :style="{ backgroundColor: value.color }"
-        class="label">{{ value.label }}</span>
-      <span class="val">{{ value.val }}</span>
-    </div>
-  </div>
+  <g>
+    <circle
+      v-if="isActive"
+      :cx="xScale(dataset[index].x)"
+      :cy="yScale(dataset[index].y)"
+      class="dot"
+      r="5" />
+    <rect
+      :width="width"
+      :height="height"
+      :x="x"
+      :y="y"
+      @mousemove="throttledOnMouseMove"
+      @mouseout="onMouseOut"
+      class="overlay" />
+  </g>
 </template>
 
 <script>
+import _ from 'lodash';
+
 export default {
   props: {
-    active: {
-      type: Boolean,
+    width: {
+      type: Number,
       required: true,
     },
-    date: {
-      type: Date,
+    height: {
+      type: Number,
       required: true,
     },
-    values: {
+    x: {
+      type: Number,
+      required: true,
+    },
+    y: {
+      type: Number,
+      required: true,
+    },
+    xScale: {
+      type: Function,
+      required: true,
+    },
+    yScale: {
+      type: Function,
+      required: true,
+    },
+    dataset: {
       type: Array,
       required: true,
     },
   },
   data: function () {
     return {
+      index: null,
     };
   },
   computed: {
+    // NOTE: https://github.com/vuejs/vue/issues/2870#issuecomment-219096773
+    throttledOnMouseMove: function () {
+      return _.throttle(this.onMouseMove, 50);
+    },
+    per () {
+      return this.width / this.dataset.length;
+    },
+    isActive () {
+      return this.index !== null;
+    },
   },
   mounted () {
   },
   methods: {
-    formatDate (date) {
-      return moment(date).format('MM/DD hh:mm');
+    onMouseMove: function (e) {
+      const targetRect = e.currentTarget;
+
+      if (!targetRect) { return null; }
+
+      const xPoint = e.clientX - targetRect.getBoundingClientRect().left;
+      const index = Math.round(xPoint / this.per);
+
+      this.index = index === this.dataset.length ? index - 1 : index;
+    },
+    onMouseOut () {
+      this.throttledOnMouseMove.cancel();
+      this.index = null;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .tooltip {
-    position: absolute;
-    background-color: rgba(0, 0, 0, .45);
-    padding: 5px;
-    width: 100px;
-    color: #fff;
-    font-size: 10px;
-    text-align: right;
-    opacity: 0;
-    transition: opacity .2s linear;
+  .dot {
+    fill: red;
+  }
 
-    &.active {
-      opacity: 1;
-    }
-
-    .legend {
-      .label {
-        padding: 2px 3px;
-      }
-      .val {
-        margin-left: 2px;
-      }
-    }
+  .overlay {
+    fill-opacity: 0;
   }
 </style>
