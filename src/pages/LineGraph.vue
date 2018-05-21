@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div>折れ線グラフ</div>
     <div>
-      <button @click="datasets = generateData()">Change</button>
+      <button
+        @click="datasets = generateData()"
+        class="random-button">
+        Random
+      </button>
     </div>
     <activity-graph :datasets="[{ data: datasets, color: '#4080d8' }]" /> <!-- datasetsの命名をどうにかしたい -->
   </div>
@@ -41,5 +44,26 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .random-button {
+    padding: 10px;
+    outline: none;
+    background-color: #fff;
+    border: solid 1px #999;
+    font-size: 18px;
+    color: #999;
+
+    &.isActive {
+      background-color: #999;
+      color: #fff;
+    }
+
+    &:not(:last-child) {
+      border-right: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 </style>

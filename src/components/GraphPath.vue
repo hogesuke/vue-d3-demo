@@ -23,6 +23,10 @@ export default {
       type: Function,
       required: true,
     },
+    ease: {
+      type: Object,
+      required: false,
+    },
   },
   data: function () {
     return {
@@ -52,8 +56,8 @@ export default {
     tweenPath (detaset) {
       TweenLite.to(
         this.$data,
-        0.5,
-        { description: this.generateDescription(detaset) }
+        1,
+        { description: this.generateDescription(detaset), ease: this.ease }
       );
     },
     generateDescription: function () {

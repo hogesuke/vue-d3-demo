@@ -1,7 +1,5 @@
 <template>
-  <div
-    :style="{ width: svgWidth + 'px', height: svgHeight + 'px' }"
-    class="graph-container">
+  <div class="graph-container">
     <svg
       :width="svgWidth"
       :height="svgHeight"
@@ -18,7 +16,8 @@
         :key="index"
         :dataset="dataset"
         :xScale="xScale"
-        :yScale="yScale" />
+        :yScale="yScale"
+        :ease="ease" />
       <tool-tip
         :width="width"
         :height="height"
@@ -28,11 +27,21 @@
         :yScale="yScale"
         :dataset="datasets[0].data"/> <!-- TODO 複数のデータセットに対応するか否か -->
     </svg>
+    <div class="ease-items">
+      <button
+        v-for="(item, key) in easeItems"
+        :key="key"
+        :class="{ isActive: ease === item }"
+        @click="onEaseItemClick(item)">
+        {{ key }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import * as d3 from 'd3';
+import { Bounce, SteppedEase, Back, Power2 } from 'gsap';
 import GraphPath from './GraphPath';
 import XAxis from './XAxis';
 import YAxis from './YAxis';
@@ -58,6 +67,13 @@ export default {
       ymin: 0,
       ymax: 0,
       margin: { top: 10, right: 30, bottom: 25, left: 55 },
+      easeItems: {
+        Power2: Power2.easeIn,
+        Bounce: Bounce.easeIn,
+        Back: Back.easeIn.config(3),
+        SteppedEase: SteppedEase.config(5),
+      },
+      ease: null,
     };
   },
   computed: {
@@ -106,8 +122,12 @@ export default {
     },
   },
   mounted () {
+    this.ease = this.easeItems[Object.keys(this.easeItems)[0]];
   },
   methods: {
+    onEaseItemClick (item) {
+      this.ease = item;
+    },
   },
 };
 </script>
@@ -115,5 +135,30 @@ export default {
 <style lang="scss">
   .graph-container {
     margin: 50px auto;
+  }
+  .ease-items {
+    margin-top: 40px;
+
+    button {
+      padding: 10px;
+      outline: none;
+      background-color: #fff;
+      border: solid 1px #999;
+      font-size: 18px;
+      color: #999;
+
+      &.isActive {
+        background-color: #999;
+        color: #fff;
+      }
+
+      &:not(:last-child) {
+        border-right: none;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 </style>
