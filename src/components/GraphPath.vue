@@ -27,6 +27,10 @@ export default {
       type: Object,
       required: false,
     },
+    curve: {
+      type: Function,
+      required: false,
+    },
   },
   data: function () {
     return {
@@ -46,7 +50,7 @@ export default {
       return d3.line()
         .x(d => this.xScale(d.x))
         .y(d => this.yScale(d.y))
-        .curve(d3.curveLinear);
+        .curve(this.curve);
     },
   },
   mounted () {
@@ -56,7 +60,7 @@ export default {
     tweenPath (detaset) {
       TweenLite.to(
         this.$data,
-        1,
+        this.ease === null ? 0 : 1,
         {
           description: this.generateDescription(detaset),
           ease: this.ease,

@@ -2,12 +2,14 @@
   <div>
     <div>
       <button
-        @click="datasets = generateData()"
+        @click="datasets = generateRandomData()"
         class="random-button">
         Random
       </button>
     </div>
-    <activity-graph :datasets="[{ data: datasets, color: '#4080d8' }]" /> <!-- datasetsの命名をどうにかしたい -->
+    <activity-graph
+      :datasets="[{ data: datasets, color: '#4080d8' }]"
+      @random="datasets = generateRandomData()"/> <!-- datasetsの命名をどうにかしたい -->
   </div>
 </template>
 
@@ -22,7 +24,7 @@ export default {
   },
   data: function () {
     return {
-      datasets: this.generateData(),
+      datasets: this.generateRandomData(),
     };
   },
   computed: {
@@ -33,7 +35,7 @@ export default {
     getRandom (max, min) {
       return Math.floor(Math.random() * (max + 1 - min)) + min;
     },
-    generateData () {
+    generateRandomData () {
       const data = [];
       for (let i = 0; i <= 50; i++) {
         data.push({ x: i, y: this.getRandom(0, 100) });

@@ -18,6 +18,7 @@
         :xScale="xScale"
         :yScale="yScale"
         :ease="ease"
+        :curve="curve"
         @change-path="handleChangePath"/>
       <tool-tip
         :width="width"
@@ -34,6 +35,18 @@
       :style="{ height: svgHeight + 'px' }"
       class="path-description">
     </textarea>
+    <div class="button-container">
+      <div class="ease-items">
+        <button
+          v-for="(item, key) in curveItems"
+          :key="key"
+          :class="{ isActive: curve === item }"
+          class="curve-button"
+          @click="onCurveItemClick(item)">
+          {{ key }}
+        </button>
+      </div>
+    </div>
     <div class="button-container">
       <div class="ease-items">
         <button
@@ -84,12 +97,19 @@ export default {
       ymax: 0,
       margin: { top: 10, right: 30, bottom: 25, left: 55 },
       easeItems: {
+        None: null,
         Power2: Power2.easeOut,
         Bounce: Bounce.easeOut,
         Back: Back.easeOut.config(3),
         SteppedEase: SteppedEase.config(5),
       },
+      curveItems: {
+        curveLinear: d3.curveLinear,
+        curveStep: d3.curveStep,
+        curveCatmullRom: d3.curveCatmullRom,
+      },
       ease: null,
+      curve: null,
       pathDescription: null,
       showDescription: false,
     };
@@ -139,12 +159,18 @@ export default {
         .range([this.height + this.margin.top, this.margin.top]);
     },
   },
-  mounted () {
+  created () {
     this.ease = this.easeItems[Object.keys(this.easeItems)[0]];
+    this.curve = this.curveItems[Object.keys(this.curveItems)[0]];
   },
   methods: {
     onEaseItemClick (item) {
       this.ease = item;
+      this.$emit('random');
+    },
+    onCurveItemClick (item) {
+      this.curve = item;
+      this.$emit('random');
     },
     handleChangePath (pathDescription) {
       this.pathDescription = pathDescription;
