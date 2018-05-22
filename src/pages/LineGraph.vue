@@ -35,7 +35,7 @@ export default {
     },
     generateData () {
       const data = [];
-      for (let i = 1; i <= 50; i++) {
+      for (let i = 0; i <= 50; i++) {
         data.push({ x: i, y: this.getRandom(0, 100) });
       }
       return data;
