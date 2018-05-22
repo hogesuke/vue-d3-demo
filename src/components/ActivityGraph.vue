@@ -68,9 +68,9 @@ export default {
       ymax: 0,
       margin: { top: 10, right: 30, bottom: 25, left: 55 },
       easeItems: {
-        Power2: Power2.easeIn,
-        Bounce: Bounce.easeIn,
-        Back: Back.easeIn.config(3),
+        Power2: Power2.easeOut,
+        Bounce: Bounce.easeOut,
+        Back: Back.easeOut.config(3),
         SteppedEase: SteppedEase.config(5),
       },
       ease: null,
