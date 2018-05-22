@@ -17,7 +17,8 @@
         :dataset="dataset"
         :xScale="xScale"
         :yScale="yScale"
-        :ease="ease" />
+        :ease="ease"
+        @change-path="handleChangePath"/>
       <tool-tip
         :width="width"
         :height="height"
@@ -27,13 +28,28 @@
         :yScale="yScale"
         :dataset="datasets[0].data"/> <!-- TODO 複数のデータセットに対応するか否か -->
     </svg>
-    <div class="ease-items">
+    <textarea
+      v-if="showDescription"
+      v-model="pathDescription"
+      :style="{ height: svgHeight + 'px' }"
+      class="path-description">
+    </textarea>
+    <div class="button-container">
+      <div class="ease-items">
+        <button
+          v-for="(item, key) in easeItems"
+          :key="key"
+          :class="{ isActive: ease === item }"
+          class="ease-button"
+          @click="onEaseItemClick(item)">
+          {{ key }}
+        </button>
+      </div>
       <button
-        v-for="(item, key) in easeItems"
-        :key="key"
-        :class="{ isActive: ease === item }"
-        @click="onEaseItemClick(item)">
-        {{ key }}
+        @click="showDescription = !showDescription"
+        :class="{ isActive: showDescription }"
+        class="d-button">
+        d
       </button>
     </div>
   </div>
@@ -74,6 +90,8 @@ export default {
         SteppedEase: SteppedEase.config(5),
       },
       ease: null,
+      pathDescription: null,
+      showDescription: false,
     };
   },
   computed: {
@@ -128,6 +146,9 @@ export default {
     onEaseItemClick (item) {
       this.ease = item;
     },
+    handleChangePath (pathDescription) {
+      this.pathDescription = pathDescription;
+    },
   },
 };
 </script>
@@ -136,7 +157,19 @@ export default {
   .graph-container {
     margin: 50px auto;
   }
-  .ease-items {
+  .path-description {
+    box-sizing: border-box;
+    width: 600px;
+    padding: 10px;
+    resize: none;
+    outline: none;
+    font-size: 12px;
+    line-height: 1.2em;
+    color: #666;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
     margin-top: 40px;
 
     button {
@@ -152,13 +185,20 @@ export default {
         color: #fff;
       }
 
-      &:not(:last-child) {
-        border-right: none;
-      }
-
       &:hover {
         cursor: pointer;
       }
+    }
+
+    .ease-items {
+      button:not(:last-child) {
+        border-right: none;
+      }
+    }
+
+    .d-button {
+      margin-left: 20px;
+      padding: 10px 15px;
     }
   }
 </style>

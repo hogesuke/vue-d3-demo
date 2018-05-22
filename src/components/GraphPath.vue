@@ -57,11 +57,18 @@ export default {
       TweenLite.to(
         this.$data,
         1,
-        { description: this.generateDescription(detaset), ease: this.ease }
+        {
+          description: this.generateDescription(detaset),
+          ease: this.ease,
+          onUpdate: this.handleUpdate,
+        }
       );
     },
-    generateDescription: function () {
+    generateDescription () {
       return this.line(this.dataset.data);
+    },
+    handleUpdate () {
+      this.$emit('change-path', this.description);
     },
   },
 };
