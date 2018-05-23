@@ -7,18 +7,18 @@
         Random
       </button>
     </div>
-    <activity-graph
+    <my-graph
       :datasets="[{ data: datasets, color: '#4080d8' }]"
       @random="datasets = generateRandomData()"/> <!-- datasetsの命名をどうにかしたい -->
   </div>
 </template>
 
 <script>
-import ActivityGraph from '../components/ActivityGraph';
+import Graph from '../components/Graph';
 
 export default {
   components: {
-    ActivityGraph,
+    myGraph: Graph,
   },
   props: {
   },
