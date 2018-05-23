@@ -55,6 +55,7 @@ export default {
   },
   mounted () {
     this.description = this.generateDescription();
+    this.handleUpdate();
   },
   methods: {
     tweenPath (detaset) {

@@ -111,7 +111,7 @@ export default {
       ease: null,
       curve: null,
       pathDescription: null,
-      showDescription: false,
+      showDescription: true,
     };
   },
   computed: {
